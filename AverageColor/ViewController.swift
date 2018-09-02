@@ -15,8 +15,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var detailLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView!
 
-    let pixelThinner = 5
+    let pixelThinner = 100
 
+    let pixelCounterX = 0
+    let pixelCounterY = 0
+    
     let numberOfImages = 15
     var images: [String]!
 
@@ -82,9 +85,14 @@ class ViewController: UIViewController {
         }
     }
 
+    
+    
+    //RIGHT HERE YOYO THIS IS IMPORTANT YOYO RIGHT HERE YOYO RIGHT HERE BRO
     func findColors(_ image: UIImage, completion: @escaping ([String: Int]) -> Void) {
         guard let pixelData = image.cgImage?.dataProvider?.data else { completion([:]); return }
         let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
+        
+        var kushCounter = 0
 
         var countedColors: [String: Int] = [:]
 
@@ -103,14 +111,33 @@ class ViewController: UIViewController {
             for y in heightRange {
                 let pixelInfo: Int = ((pixelsWide * y) + x) * 4
                 let color = "\(data[pixelInfo]).\(data[pixelInfo + 1]).\(data[pixelInfo + 2])"
+                if data[pixelInfo] < 120 && data[pixelInfo + 1] > 90 && data[pixelInfo + 2] < 60 {
+                    
+                    print("Kushkie")
+                    kushCounter = kushCounter + 1
+                    
+                }
+                    //^^if the pixel has RGB values inside the accepted standards, print "Kushkie"
+                    //^^if not, print the RBG values
+                else{
+                print("\(data[pixelInfo]).\(data[pixelInfo + 1]).\(data[pixelInfo + 2])")
+                }
+                //red is first number, green is second number, blue is third number
+                
                 if countedColors[color] == nil {
                     countedColors[color] = 0
                 } else {
                     countedColors[color]! += 1
                 }
             }
+            
         }
-
+        print("Below is kushCounter, and below that is total pixels counted")
+        print(kushCounter)
+        print(countedColors.count)
+ 
+        
+        
         completion(countedColors)
     }
 
@@ -138,6 +165,8 @@ class ViewController: UIViewController {
                 }
             }
         }
+        print("END");
         return (primaryColor, secondaryColor, detailColor)
     }
+ 
 }
